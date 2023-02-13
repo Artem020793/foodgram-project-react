@@ -65,13 +65,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer = RecipesBriefSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         objects = model.objects.filter(user=self.request.user, recipe=recipe)
-        if not objects.exists():
+        if objects.delete()[0] == 0:
             return Response(
                 {'errors': errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        objects.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     def creating_pdf(dictionary, pdf_file):

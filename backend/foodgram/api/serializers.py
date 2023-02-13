@@ -32,15 +32,7 @@ class WriteIngredientRecipeSerializer(ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
-    amount = serializers.IntegerField(
-        validators=(
-            MinValueValidator(
-                limit_value=MIN_INGREDIENT_AMOUNT,
-                message=(f'Количество ингредиента не может быть '
-                         f'меньше {MIN_INGREDIENT_AMOUNT}')
-            ),
-        )
-    )
+    amount = serializers.IntegerField()
 
     class Meta:
         model = IngredientRecipe
@@ -49,13 +41,9 @@ class WriteIngredientRecipeSerializer(ModelSerializer):
 
 class TagSerializer(ModelSerializer):
     name = serializers.CharField(
-        max_length=100,
-        validators=(UniqueValidator(Tag.objects.all()),)
-    )
+        max_length=100,)
     slug = serializers.SlugField(
-        max_length=50,
-        validators=(UniqueValidator(Tag.objects.all()),)
-    )
+        max_length=50,)
 
     class Meta:
         model = Tag
