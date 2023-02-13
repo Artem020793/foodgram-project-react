@@ -30,14 +30,12 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, IngredientSearchFilter,)
     search_fields = ('^name',)
-    pagination_class = None
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Возвращает список всех тегов или конкретный тег."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -66,13 +64,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer.save()
             serializer = RecipesBriefSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        object = model.objects.filter(user=self.request.user, recipe=recipe)
-        if not object.exists():
+        objects = model.objects.filter(user=self.request.user, recipe=recipe)
+        if not objects.exists():
             return Response(
                 {'errors': errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        object.delete()
+        objects.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
