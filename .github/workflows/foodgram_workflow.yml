@@ -59,7 +59,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull artem020793k/foodgram_frontend
+            sudo docker pull artem020793/foodgram_frontend
             sudo docker pull artem020793/foodgram_backend
             sudo docker compose stop
             sudo docker compose rm web
