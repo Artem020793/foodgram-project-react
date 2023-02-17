@@ -23,14 +23,13 @@ class UserSerializer(ModelSerializer):
         if request is None or request.user.is_anonymous:
             return False
         return Follow.objects.filter(user=request.user, author=obj).exists()
-    
-    
+
+
 class CreateUserSerializer(UserCreateSerializer):
     username = CharField(validators=[UniqueValidator(
         queryset=User.objects.all())])
     email = EmailField(validators=[UniqueValidator(
         queryset=User.objects.all())])
-
 
     class Meta:
         model = User
