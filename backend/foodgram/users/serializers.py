@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
+from rest_framework.serializers import (CharField, EmailField, ModelSerializer)
+
+from djoser.serializers import UserCreateSerializer, UserSerializer
 
 from recipes.models import Recipe
 from users.models import Follow, User
@@ -20,6 +23,21 @@ class UserSerializer(ModelSerializer):
         if request is None or request.user.is_anonymous:
             return False
         return Follow.objects.filter(user=request.user, author=obj).exists()
+    
+    
+class CreateUserSerializer(UserCreateSerializer):
+    username = CharField(validators=[UniqueValidator(
+        queryset=User.objects.all())])
+    email = EmailField(validators=[UniqueValidator(
+        queryset=User.objects.all())])
+
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'username',
+                  'first_name', 'last_name',
+                  'password',)
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class FollowSerializer(serializers.ModelSerializer):
