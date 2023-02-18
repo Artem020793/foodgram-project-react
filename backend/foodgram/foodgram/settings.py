@@ -1,10 +1,11 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-x5x118*j7pzym8n*t7pv%*9205twnmejhgaltr2s@a)d7*ngc+'
 
@@ -30,11 +31,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'colorfield',
+    'rest_framework',
+    'rest_framework.authtoken',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
-    'rest_framework',
-    'rest_framework.authtoken',
     'django_filters',
     'djoser',
 ]

@@ -8,7 +8,7 @@ services:
       - ./.env
 
   backend:
-    image: artem020793/foodgram_backend:v30
+    image: artem020793/foodgram_backend:v41
     restart: always
     volumes:
       - static_value:/app/static/
@@ -19,7 +19,7 @@ services:
       - ./.env
 
   frontend:
-    image: artem020793/foodgram_frontend
+    image: artem020793/foodgram_frontend:v1
     volumes:
       - ../frontend/:/app/result_build/
 

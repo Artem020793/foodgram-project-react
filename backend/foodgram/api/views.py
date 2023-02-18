@@ -31,6 +31,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend, IngredientSearchFilter,)
     search_fields = ('^name',)
     permission_classes = (AllowAny,)
+    pagination_class = None
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -38,6 +39,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -66,14 +68,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
             serializer.save()
             serializer = RecipesBriefSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        objects = model.objects.filter(user=self.request.user, recipe=recipe)
-        if objects.delete()[0] == 0:
+        object = model.objects.filter(user=self.request.user, recipe=recipe)
+        if not object.exists():
             return Response(
                 {'errors': errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        object.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     def creating_pdf(dictionary, pdf_file):

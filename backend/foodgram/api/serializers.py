@@ -3,9 +3,9 @@ from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from rest_framework.validators import UniqueTogetherValidator
+from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
 
-from foodgram.settings import MIN_COOKING_TIME
+from foodgram.settings import MIN_COOKING_TIME, MIN_INGREDIENT_AMOUNT
 from recipes.models import (Cart, Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from users.serializers import UserSerializer
@@ -32,7 +32,15 @@ class WriteIngredientRecipeSerializer(ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
-    amount = serializers.IntegerField()
+    amount = serializers.IntegerField(
+        validators=(
+            MinValueValidator(
+                limit_value=MIN_INGREDIENT_AMOUNT,
+                message=(f'Количество ингредиента не может быть '
+                         f'меньше {MIN_INGREDIENT_AMOUNT}')
+            ),
+        )
+    )
 
     class Meta:
         model = IngredientRecipe
@@ -41,9 +49,13 @@ class WriteIngredientRecipeSerializer(ModelSerializer):
 
 class TagSerializer(ModelSerializer):
     name = serializers.CharField(
-        max_length=100,)
+        max_length=100,
+        validators=(UniqueValidator(Tag.objects.all()),)
+    )
     slug = serializers.SlugField(
-        max_length=50,)
+        max_length=50,
+        validators=(UniqueValidator(Tag.objects.all()),)
+    )
 
     class Meta:
         model = Tag
@@ -59,7 +71,8 @@ class ReadRecipeSerializer(ModelSerializer):
         read_only=True
     )
     image = Base64ImageField()
-    is_favorited = serializers.SerializerMethodField()
+    is_favorited = serializers.SerializerMethodField(
+        method_name='get_is_favorited')
     is_in_shopping_cart = serializers.SerializerMethodField(
         method_name='get_is_in_shopping_cart')
 
