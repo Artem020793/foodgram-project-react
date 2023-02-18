@@ -7,7 +7,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from foodgram.settings import NAME_SHOPPING_CART_PDF
@@ -30,12 +30,14 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, IngredientSearchFilter,)
     search_fields = ('^name',)
+    permission_classes = (AllowAny,)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     """Возвращает список всех тегов или конкретный тег."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = (AllowAny,)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

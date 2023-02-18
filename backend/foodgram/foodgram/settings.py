@@ -10,9 +10,7 @@ SECRET_KEY = 'django-insecure-x5x118*j7pzym8n*t7pv%*9205twnmejhgaltr2s@a)d7*ngc+
 
 DEBUG = True
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://http://51.250.106.189.com'
-]
+CSRF_TRUSTED_ORIGINS = ['http://*localhost', 'http://51.250.106.189']
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -39,13 +37,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'djoser',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
