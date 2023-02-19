@@ -22,9 +22,11 @@ services:
     image: artem020793/foodgram_frontend:v1
     volumes:
       - ../frontend/:/app/result_build/
+    depends_on:
+      - db
 
   nginx:
-    image: nginx:1.19.3
+    image: nginx:1.21.3-alpine
     ports:
       - "80:80"
     volumes:
@@ -34,7 +36,6 @@ services:
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
-      - frontend
       - backend
 
 volumes:
